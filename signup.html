@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('noesisTheme') || 'light');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open an Account — NOESIS Bank & Trust</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        // Google Maps bootstrap loader (official async pattern). Swap the key
+        // in app.js's NOESIS_CONFIG — this snippet just reads that same value.
+        (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+            key: "YOUR_GOOGLE_MAPS_API_KEY"
+        });
+    </script>
+    <style>
+        .signup-page { min-height: 100vh; background: var(--offwhite); }
+        .signup-header { background: var(--navy); padding: 30px 0; }
+        .signup-header .container { max-width: 600px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 12px; }
+        .signup-header .logo-icon { width: 38px; height: 38px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--navy); font-weight: 700; font-size: 16px; font-family: 'Playfair Display', serif; border: 2px solid var(--gold); }
+        .signup-header .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 2px; }
+        .signup-header .logo-sub { font-size: 9px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+
+        .signup-body { padding: 40px 0; }
+        .signup-body .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        .signup-card { background: var(--white); border-radius: 16px; padding: 40px; border: 1px solid var(--light-gray); }
+        .signup-card h2 { font-size: 28px; margin-bottom: 6px; }
+        .signup-card > p { color: var(--gray); font-size: 14px; margin-bottom: 28px; }
+        .signup-steps { display: flex; gap: 8px; margin-bottom: 32px; }
+        .step { flex: 1; height: 4px; background: var(--light-gray); border-radius: 2px; transition: all 0.3s; }
+        .step.active { background: var(--gold); }
+        .step.completed { background: var(--success); }
+        .signup-form-step { display: none; }
+        .signup-form-step.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .btn-next, .btn-submit { width: 100%; background: var(--navy); color: var(--gold); padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; border: 1px solid var(--gold); cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+        .btn-next:hover, .btn-submit:hover { background: var(--gold); color: var(--navy); }
+        .btn-back { background: transparent; color: var(--gray); border: 1px solid var(--light-gray); margin-right: 10px; }
+        .btn-back:hover { background: var(--offwhite); color: var(--navy); }
+        .btn-group { display: flex; gap: 10px; }
+        .terms { font-size: 12px; color: var(--gray); margin-top: 16px; line-height: 1.6; }
+        .terms a { color: var(--gold); }
+        .login-link { text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--light-gray); }
+        .login-link p { color: var(--gray); font-size: 13px; }
+        .login-link a { color: var(--gold); font-weight: 600; }
+
+        [data-theme="dark"] .signup-header .logo-text { color: #ffffff; }
+        [data-theme="dark"] .signup-header .logo-icon { background: #ffffff; }
+        [data-theme="dark"] .btn-back:hover { color: #eceadf; }
+
+        #addressAutocompleteContainer gmp-place-autocomplete { display: block; }
+        .address-fallback-note { font-size: 11px; color: var(--gray); margin-top: -10px; margin-bottom: 14px; }
+
+        @media (max-width: 480px) {
+            .signup-card { padding: 24px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-page">
+        <div class="signup-header">
+            <div class="container">
+                <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+                    <div class="logo-icon">N</div>
+                    <div>
+                        <div class="logo-text">NOESIS</div>
+                        <div class="logo-sub">Bank & Trust</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="signup-body">
+            <div class="container">
+                <div class="signup-card">
+                    <h2>Open Your Account</h2>
+                    <p>Join 50,000+ Nigerians banking smarter. Takes under 5 minutes.</p>
+
+                    <div class="signup-steps">
+                        <div class="step active" id="step1Indicator"></div>
+                        <div class="step" id="step2Indicator"></div>
+                        <div class="step" id="step3Indicator"></div>
+                    </div>
+
+                    <div class="alert-box" id="signupAlert" style="display:none;margin-bottom:20px;">
+                        <div class="alert-box-icon">&#9888;</div>
+                        <p id="signupAlertMsg"></p>
+                    </div>
+
+                    <form id="signupForm">
+                        <!-- Step 1: Personal Info -->
+                        <div class="signup-form-step active" id="step1">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>First Name *</label>
+                                    <input type="text" id="firstName" placeholder="John" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name *</label>
+                                    <input type="text" id="lastName" placeholder="Doe" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address *</label>
+                                <input type="email" id="email" placeholder="john@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="tel" id="phone" placeholder="+234 800 000 0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth *</label>
+                                <input type="date" id="dob" required>
+                            </div>
+                            <button type="button" class="btn-next" onclick="goToStep(2)">Continue</button>
+                        </div>
+
+                        <!-- Step 2: Account Details -->
+                        <div class="signup-form-step" id="step2">
+                            <div class="form-group">
+                                <label>Account Type *</label>
+                                <select id="accountType" required>
+                                    <option value="">Select account type</option>
+                                    <option value="Savings">Savings Account</option>
+                                    <option value="Current">Current Account</option>
+                                    <option value="Business">Business Account</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>BVN (Bank Verification Number) *</label>
+                                <input type="text" id="bvn" placeholder="11-digit BVN" maxlength="11" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Search Address <span style="font-weight:400;color:var(--gray);">(optional, powered by Google — fills in the fields below)</span></label>
+                                <div id="addressAutocompleteContainer"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Residential Address *</label>
+                                <input type="text" id="address" placeholder="123 Street Name, City" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>State / Region *</label>
+                                    <input type="text" id="state" placeholder="e.g. Lagos" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Country *</label>
+                                    <input type="text" id="country" placeholder="e.g. Nigeria" value="Nigeria" required>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn-next btn-back" onclick="goToStep(1)">Back</button>
+                                <button type="button" class="btn-next" onclick="goToStep(3)" style="flex:1;">Continue</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Security -->
+                        <div class="signup-form-step" id="step3">
+                            <div class="form-group">
+                                <label>Create Password *</label>
+                                <input type="password" id="password" placeholder="Min 8 chars, 1 number, 1 symbol" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password *</label>
+                                <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Transaction PIN (4 digits) *</label>
+                                <input type="password" id="pin" placeholder="****" maxlength="4" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Referral Code (Optional)</label>
+                                <input type="text" id="referral" placeholder="Enter code if you have one">
+                            </div>
+                            <p class="terms">By opening an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. Your BVN is required by CBN regulations and is used solely for identity verification.</p>
+                            <div class="btn-group">
+                                <button type="button" class="btn-next btn-back" onclick="goToStep(2)">Back</button>
+                                <button type="submit" class="btn-submit" style="flex:1;">Open My Account</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="login-link">
+                        <p>Already have an account? <a href="login.html">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        let currentStep = 1;
+
+        function goToStep(step) {
+            // Validate current step
+            if (step > currentStep && !validateStep(currentStep)) return;
+
+            document.querySelectorAll('.signup-form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            // Update indicators
+            for (let i = 1; i <= 3; i++) {
+                const ind = document.getElementById('step' + i + 'Indicator');
+                ind.classList.remove('active', 'completed');
+                if (i < step) ind.classList.add('completed');
+                else if (i === step) ind.classList.add('active');
+            }
+            currentStep = step;
+        }
+
+        function validateStep(step) {
+            const alertBox = document.getElementById('signupAlert');
+            const alertMsg = document.getElementById('signupAlertMsg');
+
+            if (step === 1) {
+                const fn = document.getElementById('firstName').value.trim();
+                const ln = document.getElementById('lastName').value.trim();
+                const em = document.getElementById('email').value.trim();
+                const ph = document.getElementById('phone').value.trim();
+                const dob = document.getElementById('dob').value;
+                if (!fn || !ln || !em || !ph || !dob) {
+                    alertMsg.textContent = 'Please fill in all required fields.';
+                    alertBox.style.display = 'flex';
+                    return false;
+                }
+                if (!em.includes('@')) {
+                    alertMsg.textContent = 'Please enter a valid email address.';
+                    alertBox.style.display = 'flex';
+                    return false;
+                }
+            }
+            if (step === 2) {
+                const at = document.getElementById('accountType').value;
+                const bvn = document.getElementById('bvn').value.trim();
+                const addr = document.getElementById('address').value.trim();
+                const st = document.getElementById('state').value.trim();
+                const ctry = document.getElementById('country').value.trim();
+                if (!at || !bvn || !addr || !st || !ctry) {
+                    alertMsg.textContent = 'Please fill in all required fields.';
+                    alertBox.style.display = 'flex';
+                    return false;
+                }
+                if (bvn.length !== 11 || !/^\d+$/.test(bvn)) {
+                    alertMsg.textContent = 'BVN must be exactly 11 digits.';
+                    alertBox.style.display = 'flex';
+                    return false;
+                }
+            }
+            alertBox.style.display = 'none';
+            return true;
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('signupAlert');
+            const alertMsg = document.getElementById('signupAlertMsg');
+
+            const pw = document.getElementById('password').value;
+            const cpw = document.getElementById('confirmPassword').value;
+            const pin = document.getElementById('pin').value;
+
+            if (pw.length < 8) {
+                alertMsg.textContent = 'Password must be at least 8 characters.';
+                alertBox.style.display = 'flex';
+                return;
+            }
+            if (pw !== cpw) {
+                alertMsg.textContent = 'Passwords do not match.';
+                alertBox.style.display = 'flex';
+                return;
+            }
+            if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+                alertMsg.textContent = 'PIN must be exactly 4 digits.';
+                alertBox.style.display = 'flex';
+                return;
+            }
+
+            // Check if email exists
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            if (NoesisBank.findByEmail(email)) {
+                alertMsg.textContent = 'An account with this email already exists. Please sign in.';
+                alertBox.style.display = 'flex';
+                return;
+            }
+
+            const accNum = NoesisBank.generateAccountNumber();
+
+            const newUser = {
+                id: 'usr_' + Date.now(),
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: email,
+                phone: document.getElementById('phone').value.trim(),
+                dob: document.getElementById('dob').value,
+                accountType: document.getElementById('accountType').value,
+                bvn: document.getElementById('bvn').value.trim(),
+                nin: null,
+                address: document.getElementById('address').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                country: document.getElementById('country').value.trim(),
+                password: pw,
+                pin: pin,
+                accountNumber: accNum,
+                tier: 'standard',
+                balance: 0,
+                createdAt: new Date().toISOString()
+            };
+
+            const users = NoesisBank.getUsers();
+            users.push(newUser);
+            NoesisBank.saveUsers(users);
+
+            // Auto login
+            const session = {
+                id: newUser.id,
+                name: newUser.firstName + ' ' + newUser.lastName,
+                email: newUser.email,
+                accountNumber: newUser.accountNumber,
+                balance: newUser.balance,
+                accountType: newUser.accountType,
+                tier: newUser.tier,
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('noesisUser', JSON.stringify(session));
+
+            NoesisBank.sendEmail({
+                to_email: newUser.email,
+                to_name: newUser.firstName,
+                subject: 'Welcome to NOESIS Bank & Trust',
+                message: 'Your account is open. Account number: ' + accNum + ' (' + newUser.accountType + '). Keep your password and transaction PIN to yourself — NOESIS will never ask for either by phone or email.'
+            });
+
+            alertBox.className = 'alert-box alert-success';
+            alertBox.querySelector('.alert-box-icon').textContent = '✓';
+            alertMsg.textContent = 'Account created successfully! Redirecting...';
+            alertBox.style.display = 'flex';
+
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        });
+
+        // Google address autocomplete — enhances the address field when a
+        // valid Maps API key is configured; the plain fields above always
+        // work fine on their own if this can't load.
+        (async function initAddressAutocomplete() {
+            try {
+                const { PlaceAutocompleteElement } = await google.maps.importLibrary('places');
+                const placeAutocomplete = new PlaceAutocompleteElement({ includedPrimaryTypes: ['street_address'] });
+                document.getElementById('addressAutocompleteContainer').appendChild(placeAutocomplete);
+
+                placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+                    const place = placePrediction.toPlace();
+                    await place.fetchFields({ fields: ['formattedAddress', 'addressComponents'] });
+
+                    document.getElementById('address').value = place.formattedAddress || '';
+
+                    (place.addressComponents || []).forEach(component => {
+                        if (component.types.includes('administrative_area_level_1')) {
+                            document.getElementById('state').value = component.longText || component.shortText || '';
+                        }
+                        if (component.types.includes('country')) {
+                            document.getElementById('country').value = component.longText || '';
+                        }
+                    });
+                });
+            } catch (err) {
+                console.info('[NOESIS] Google address autocomplete is not active yet (add a Maps API key in app.js). Manual address entry still works.', err);
+            }
+        })();
+    </script>
+</body>
+</html>

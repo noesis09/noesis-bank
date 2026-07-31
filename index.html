@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('noesisTheme') || 'light');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOESIS Bank — Knowledge. Trust. Growth.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hero { background: var(--navy); color: var(--white); padding: 80px 0; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .hero .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .hero-content h1 { font-size: 48px; line-height: 1.15; margin-bottom: 20px; color: var(--white); }
+        .hero-content h1 span { color: var(--gold); }
+        .hero-content p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 32px; max-width: 450px; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .hero-visual { display: flex; justify-content: center; align-items: center; }
+        .hero-card-showcase { position: relative; width: 280px; height: 180px; }
+        .hero-card-showcase .css-card { position: absolute; transition: transform 0.3s; }
+        .hero-card-showcase .css-card:nth-child(1) { transform: rotate(-8deg) translateX(-20px); z-index: 3; }
+        .hero-card-showcase .css-card:nth-child(2) { transform: rotate(0deg) translateY(10px); z-index: 2; }
+        .hero-card-showcase .css-card:nth-child(3) { transform: rotate(8deg) translateX(20px); z-index: 1; }
+
+        .stats-bar { background: var(--offwhite); padding: 36px 0; }
+        .stats-bar .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .stat-item { text-align: center; padding: 16px; }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--gold); }
+        .stat-label { font-size: 12px; color: var(--gray); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .services-preview { padding: 80px 0; background: var(--white); }
+        .services-preview .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .service-card { background: var(--offwhite); padding: 32px 24px; border-radius: 12px; border: 1px solid var(--light-gray); transition: all 0.3s; }
+        .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 32px rgba(0,0,0,0.08); border-color: var(--gold); }
+        .service-icon { width: 48px; height: 48px; background: var(--navy); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 20px; margin-bottom: 20px; }
+        .service-card h3 { font-size: 20px; margin-bottom: 10px; }
+        .service-card p { color: var(--gray); font-size: 14px; margin-bottom: 16px; }
+        .service-card a { color: var(--gold); font-weight: 600; font-size: 13px; }
+        .service-card a:hover { color: var(--navy); }
+
+        .why-us { padding: 80px 0; background: var(--navy); color: var(--white); }
+        .why-us .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .why-us-visual { display: flex; justify-content: center; }
+        .why-us-visual .css-card { transform: rotate(-3deg); }
+        .why-us-content h2 { font-size: 36px; margin-bottom: 20px; }
+        .why-us-content h2 span { color: var(--gold); }
+        .why-us-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 28px; }
+        .feature-list { list-style: none; }
+        .feature-list li { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+        .feature-check { width: 24px; height: 24px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--navy); font-weight: 700; flex-shrink: 0; font-size: 12px; }
+        .feature-list li div h4 { font-size: 16px; margin-bottom: 3px; }
+        .feature-list li div p { color: rgba(255,255,255,0.6); font-size: 13px; margin: 0; }
+
+        .cards-section { padding: 80px 0; background: var(--offwhite); }
+        .cards-section .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .cards-content h2 { font-size: 36px; margin-bottom: 16px; }
+        .cards-content p { color: var(--gray); font-size: 15px; margin-bottom: 28px; }
+        .card-types { display: flex; flex-direction: column; gap: 14px; }
+        .card-type { display: flex; align-items: center; gap: 14px; padding: 18px; background: var(--white); border-radius: 10px; border: 1px solid var(--light-gray); transition: all 0.3s; }
+        .card-type:hover { border-color: var(--gold); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+        .card-type-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .card-type.gold .card-type-icon { background: linear-gradient(135deg, #c9a84c, #e8d5a3); color: var(--navy); }
+        .card-type.platinum .card-type-icon { background: linear-gradient(135deg, #9ca3af, #d1d5db); color: var(--navy); }
+        .card-type.black .card-type-icon { background: linear-gradient(135deg, #1f2937, #374151); color: var(--gold); }
+        .card-type-info h4 { font-size: 16px; margin-bottom: 3px; }
+        .card-type-info p { color: var(--gray); font-size: 12px; margin: 0; }
+        .cards-visual { display: flex; justify-content: center; }
+
+        .cta-banner { background: var(--gold); padding: 60px 0; text-align: center; }
+        .cta-banner .container { max-width: 700px; margin: 0 auto; padding: 0 20px; }
+        .cta-banner h2 { font-size: 36px; color: var(--navy); margin-bottom: 12px; }
+        .cta-banner p { color: rgba(10,22,40,0.7); font-size: 16px; margin-bottom: 28px; }
+
+        [data-theme="dark"] .hero,
+        [data-theme="dark"] .hero-content h1,
+        [data-theme="dark"] .why-us {
+            color: #ffffff;
+        }
+        [data-theme="dark"] .service-card a:hover { color: #eceadf; }
+
+        @media (max-width: 768px) {
+            .hero .container, .why-us .container, .cards-grid { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 32px; }
+            .hero-visual { margin-top: 30px; }
+            .stats-bar .container { grid-template-columns: repeat(2, 1fr); }
+            .services-grid { grid-template-columns: 1fr; }
+            .why-us-visual { margin-bottom: 30px; }
+            .cards-visual { margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <span>+234 707 094 4581 | Mon–Fri: 8AM–5PM</span>
+            <div>
+                <a href="login.html">Internet Banking</a>
+                <a href="contact.html">Find a Branch</a>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">N</div>
+                <div>
+                    <div class="logo-text">NOESIS</div>
+                    <div class="logo-sub">Bank & Trust</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="login.html" class="nav-cta">Online Login</a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="index.html" class="active">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html">Online Login</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Banking for the <span>Bold</span> & <span>Bright</span></h1>
+                <p>NOESIS Bank is a fresh Nigerian digital bank built for the next generation. Smart, secure, and designed around your life — not the other way around.</p>
+                <div class="hero-btns">
+                    <a href="signup.html" class="btn-primary">Open an Account</a>
+                    <a href="about.html" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card-showcase">
+                    <div class="css-card css-card-gold">
+                        <div class="css-card-content">
+                            <div class="css-card-logo">NOESIS</div>
+                            <div class="css-card-chip"></div>
+                            <div class="css-card-number">**** **** **** 8842</div>
+                            <div class="css-card-bottom">
+                                <div class="css-card-name">NOESIS GOLD</div>
+                                <div class="css-card-expiry">09/28</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-bar">
+        <div class="container">
+            <div class="stat-item">
+                <div class="stat-number">₦12B</div>
+                <div class="stat-label">Assets Under Management</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Active Customers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Branches Nationwide</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Years of Service</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-preview">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Core Services</h2>
+                <p>Everything you need to manage, grow, and protect your money.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">&#9733;</div>
+                    <h3>Personal Banking</h3>
+                    <p>Zero-fee current accounts, high-yield savings, personal loans, and debit cards that actually reward you.</p>
+                    <a href="services.html">Learn More &rarr;</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">&#9874;</div>
+                    <h3>Business Banking</h3>
+                    <p>Corporate accounts, SME loans, POS solutions, and payment tools built for Nigerian entrepreneurs.</p>
+                    <a href="services.html">Learn More &rarr;</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">&#9733;</div>
+                    <h3>Digital Banking</h3>
+                    <p>Send money instantly, pay bills, buy airtime, and manage your finances — all from your phone.</p>
+                    <a href="services.html">Learn More &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-us">
+        <div class="container">
+            <div class="why-us-visual">
+                <div class="css-card css-card-platinum" style="max-width:300px;height:190px;">
+                    <div class="css-card-content">
+                        <div class="css-card-logo">NOESIS</div>
+                        <div class="css-card-chip"></div>
+                        <div class="css-card-number">**** **** **** 5521</div>
+                        <div class="css-card-bottom">
+                            <div class="css-card-name">PLATINUM</div>
+                            <div class="css-card-expiry">12/29</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="why-us-content">
+                <h2>Why Choose <span>NOESIS</span>?</h2>
+                <p>We're not a legacy bank trying to go digital. We were born digital — built from the ground up to serve modern Nigerians.</p>
+                <ul class="feature-list">
+                    <li>
+                        <div class="feature-check">&#10003;</div>
+                        <div>
+                            <h4>No Hidden Charges</h4>
+                            <p>What you see is what you pay. Zero maintenance fees on personal accounts.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-check">&#10003;</div>
+                        <div>
+                            <h4>Instant Transfers</h4>
+                            <p>Send money to any Nigerian bank in seconds, 24/7. No downtime.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-check">&#10003;</div>
+                        <div>
+                            <h4>Bank-Grade Security</h4>
+                            <p>256-bit encryption, biometric login, and real-time fraud alerts.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-check">&#10003;</div>
+                        <div>
+                            <h4>Human Support</h4>
+                            <p>Talk to real people, not bots. WhatsApp, call, or walk into any branch.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cards-section">
+        <div class="container">
+            <div class="cards-grid">
+                <div class="cards-content">
+                    <h2>Premium Card Collection</h2>
+                    <p>Cards that match your lifestyle. From everyday spending to exclusive privileges.</p>
+                    <div class="card-types">
+                        <div class="card-type gold">
+                            <div class="card-type-icon">&#9679;</div>
+                            <div class="card-type-info">
+                                <h4>NOESIS Gold Card</h4>
+                                <p>2% cashback on dining & fuel, free ATM withdrawals nationwide</p>
+                            </div>
+                        </div>
+                        <div class="card-type platinum">
+                            <div class="card-type-icon">&#9679;</div>
+                            <div class="card-type-info">
+                                <h4>NOESIS Platinum Card</h4>
+                                <p>5% cashback on all spends, airport lounge access, travel insurance</p>
+                            </div>
+                        </div>
+                        <div class="card-type black">
+                            <div class="card-type-icon">&#9679;</div>
+                            <div class="card-type-info">
+                                <h4>NOESIS Black Card</h4>
+                                <p>Unlimited cashback, concierge service, VIP event access</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cards-visual">
+                    <div class="css-card css-card-black" style="max-width:300px;height:190px;">
+                        <div class="css-card-content">
+                            <div class="css-card-logo">NOESIS</div>
+                            <div class="css-card-chip"></div>
+                            <div class="css-card-number">**** **** **** 9901</div>
+                            <div class="css-card-bottom">
+                                <div class="css-card-name">BLACK</div>
+                                <div class="css-card-expiry">06/30</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-banner">
+        <div class="container">
+            <h2>Ready to Bank Smarter?</h2>
+            <p>Join 50,000+ Nigerians who trust NOESIS with their money. Open an account in under 5 minutes.</p>
+            <a href="signup.html" class="btn-primary" style="background:var(--navy);color:var(--gold);">Get Started Free</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-icon">N</div>
+                    <p>NOESIS Bank & Trust — A new-generation Nigerian bank built on knowledge, trust, and innovation. Licensed by the Central Bank of Nigeria.</p>
+                    <div class="footer-social">
+                        <a href="https://x.com/SamuelOLUWA288">X</a>
+                        <a href="#">in</a>
+                        <a href="#">ig</a>
+                        <a href="https://wa.me/2347070944581">WA</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Banking</h4>
+                    <ul>
+                        <li><a href="services.html">Personal Accounts</a></li>
+                        <li><a href="services.html">Business Accounts</a></li>
+                        <li><a href="services.html">Credit Cards</a></li>
+                        <li><a href="services.html">Loans</a></li>
+                        <li><a href="services.html">Savings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">Careers</a></li>
+                        <li><a href="about.html">Press</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="login.html">Internet Banking</a></li>
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Find a Branch</a></li>
+                        <li><a href="contact.html">Report Fraud</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NOESIS Bank & Trust. Licensed by CBN. NDIC Insured.</p>
+                <p class="footer-x-handle">X: @SamuelOLUWA288 | +234 707 094 4581</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

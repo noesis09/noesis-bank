@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('noesisTheme') || 'light');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us — NOESIS Bank & Trust</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-section { padding: 60px 0; background: var(--white); }
+        .contact-section .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .contact-info h2 { font-size: 32px; margin-bottom: 12px; }
+        .contact-info > p { color: var(--gray); font-size: 15px; margin-bottom: 32px; }
+        .contact-methods { display: flex; flex-direction: column; gap: 20px; }
+        .contact-method { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--offwhite); border-radius: 12px; border: 1px solid var(--light-gray); transition: all 0.3s; }
+        .contact-method:hover { border-color: var(--gold); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+        .contact-method-icon { width: 44px; height: 44px; background: var(--navy); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 18px; flex-shrink: 0; }
+        .contact-method-info h4 { font-size: 16px; margin-bottom: 3px; }
+        .contact-method-info p { color: var(--gray); font-size: 14px; margin: 0; }
+        .contact-method-info a { color: var(--gold); font-weight: 600; }
+        .contact-method-info a:hover { color: var(--navy); }
+
+        .contact-form-wrapper { background: var(--offwhite); padding: 36px; border-radius: 14px; border: 1px solid var(--light-gray); }
+        .contact-form-wrapper h3 { font-size: 24px; margin-bottom: 6px; }
+        .contact-form-wrapper > p { color: var(--gray); font-size: 14px; margin-bottom: 24px; }
+        .btn-submit { width: 100%; background: var(--navy); color: var(--gold); padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; border: 1px solid var(--gold); cursor: pointer; transition: all 0.3s; }
+        .btn-submit:hover { background: var(--gold); color: var(--navy); }
+
+        .branches-section { padding: 80px 0; background: var(--navy); color: var(--white); }
+        .branches-section .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .branches-section .section-header { text-align: center; margin-bottom: 48px; }
+        .branches-section .section-header h2 { color: var(--white); font-size: 36px; margin-bottom: 12px; }
+        .branches-section .section-header p { color: rgba(255,255,255,0.6); font-size: 16px; }
+        .branches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .branch-card { background: var(--navy-light); border-radius: 14px; padding: 28px 24px; border: 1px solid rgba(201,168,76,0.15); transition: all 0.3s; }
+        .branch-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+        .branch-card h4 { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .branch-card h3 { font-size: 20px; margin-bottom: 10px; color: var(--white); }
+        .branch-card p { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 4px; }
+        .branch-card .hours { color: var(--gold-light); font-size: 12px; margin-top: 10px; }
+
+        [data-theme="dark"] .branches-section,
+        [data-theme="dark"] .branch-card h3 {
+            color: #ffffff;
+        }
+        [data-theme="dark"] .contact-method-info a:hover { color: #eceadf; }
+
+        @media (max-width: 768px) {
+            .contact-section .container { grid-template-columns: 1fr; }
+            .branches-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <span>+234 707 094 4581 | Mon–Fri: 8AM–5PM</span>
+            <div>
+                <a href="login.html">Internet Banking</a>
+                <a href="contact.html">Find a Branch</a>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">N</div>
+                <div>
+                    <div class="logo-text">NOESIS</div>
+                    <div class="logo-sub">Bank & Trust</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <a href="login.html" class="nav-cta">Online Login</a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html" class="active">Contact</a>
+            <a href="login.html">Online Login</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Get in <span>Touch</span></h1>
+            <p>We're here to help. Reach out anytime.</p>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> <span>Contact</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <p>Our team is ready to assist you. Don't hesitate to reach out.</p>
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-method-icon">&#9742;</div>
+                        <div class="contact-method-info">
+                            <h4>Phone Support</h4>
+                            <p>+234 707 094 4581</p>
+                            <p style="font-size:12px;color:var(--gray);">Mon–Fri: 8AM–6PM | Sat: 9AM–2PM</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">&#9993;</div>
+                        <div class="contact-method-info">
+                            <h4>Email Us</h4>
+                            <p><a href="mailto:hello@noesis.bank">hello@noesis.bank</a></p>
+                            <p style="font-size:12px;color:var(--gray);">Response within 4 hours</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">&#9733;</div>
+                        <div class="contact-method-info">
+                            <h4>WhatsApp</h4>
+                            <p><a href="https://wa.me/2347070944581">+234 707 094 4581</a></p>
+                            <p style="font-size:12px;color:var(--gray);">Instant replies during business hours</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">&#9874;</div>
+                        <div class="contact-method-info">
+                            <h4>Head Office</h4>
+                            <p>12B Admiralty Way, Lekki Phase 1<br>Lagos, Nigeria</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form-wrapper">
+                <h3>Send Us a Message</h3>
+                <p>Fill out the form and we'll get back to you shortly.</p>
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="john@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" placeholder="+234 800 000 0000">
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select required>
+                            <option value="">Select a department</option>
+                            <option value="personal">Personal Banking</option>
+                            <option value="business">Business Banking</option>
+                            <option value="support">Customer Support</option>
+                            <option value="fraud">Fraud & Security</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="How can we help you today?"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="branches-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Branches</h2>
+                <p>Visit us at any of our locations across Nigeria.</p>
+            </div>
+            <div class="branches-grid">
+                <div class="branch-card">
+                    <h4>Head Office</h4>
+                    <h3>Lekki, Lagos</h3>
+                    <p>12B Admiralty Way, Lekki Phase 1</p>
+                    <p>+234 707 094 4581</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–2PM</p>
+                </div>
+                <div class="branch-card">
+                    <h4>Branch</h4>
+                    <h3>Ikeja, Lagos</h3>
+                    <p>45 Allen Avenue, Ikeja</p>
+                    <p>+234 701 234 5678</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–2PM</p>
+                </div>
+                <div class="branch-card">
+                    <h4>Branch</h4>
+                    <h3>Abuja</h3>
+                    <p>22 Aminu Kano Crescent, Wuse 2</p>
+                    <p>+234 702 345 6789</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–1PM</p>
+                </div>
+                <div class="branch-card">
+                    <h4>Branch</h4>
+                    <h3>Port Harcourt</h3>
+                    <p>88 Trans Amadi Industrial Layout</p>
+                    <p>+234 703 456 7890</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–1PM</p>
+                </div>
+                <div class="branch-card">
+                    <h4>Branch</h4>
+                    <h3>Ibadan</h3>
+                    <p>15 Ring Road, Challenge</p>
+                    <p>+234 704 567 8901</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–1PM</p>
+                </div>
+                <div class="branch-card">
+                    <h4>Branch</h4>
+                    <h3>Kano</h3>
+                    <p>33 Murtala Mohammed Way</p>
+                    <p>+234 705 678 9012</p>
+                    <p class="hours">Mon–Fri: 8AM–5PM | Sat: 9AM–1PM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-icon">N</div>
+                    <p>NOESIS Bank & Trust — A new-generation Nigerian bank built on knowledge, trust, and innovation. Licensed by the Central Bank of Nigeria.</p>
+                    <div class="footer-social">
+                        <a href="https://x.com/SamuelOLUWA288">X</a>
+                        <a href="#">in</a>
+                        <a href="#">ig</a>
+                        <a href="https://wa.me/2347070944581">WA</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Banking</h4>
+                    <ul>
+                        <li><a href="services.html">Personal Accounts</a></li>
+                        <li><a href="services.html">Business Accounts</a></li>
+                        <li><a href="services.html">Credit Cards</a></li>
+                        <li><a href="services.html">Loans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="login.html">Internet Banking</a></li>
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Find a Branch</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NOESIS Bank & Trust. Licensed by CBN. NDIC Insured.</p>
+                <p class="footer-x-handle">X: @SamuelOLUWA288 | +234 707 094 4581</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Message sent! We will reply within 4 hours.');
+            this.reset();
+        });
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast show';
+            t.textContent = msg;
+            t.style.cssText = 'position:fixed;top:80px;right:20px;background:var(--navy);color:var(--gold);padding:14px 24px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,0.2);z-index:1000;border:1px solid var(--gold);';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('noesisTheme') || 'light');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account — NOESIS Bank & Trust</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        .dashboard-body { background: var(--offwhite); min-height: 100vh; }
+        .dashboard-nav { background: var(--navy); padding: 12px 0; position: sticky; top: 0; z-index: 100; }
+        .dashboard-nav .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .dashboard-nav .logo-text { color: var(--white); font-size: 18px; }
+        .dashboard-nav-right { display: flex; align-items: center; gap: 20px; }
+        .dashboard-nav-right span { color: rgba(255,255,255,0.7); font-size: 13px; }
+        .dashboard-nav-right a { color: var(--gold); font-size: 13px; font-weight: 600; }
+        .dashboard-nav-right a:hover { color: var(--gold-light); }
+        .dashboard-nav-right button { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .dashboard-nav-right button:hover { background: var(--gold); color: var(--navy); }
+        .mobile-menu-btn-dash { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: none; border: none; }
+        .mobile-menu-btn-dash span { width: 20px; height: 2px; background: var(--white); }
+
+        .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+
+        /* Sidebar */
+        .sidebar { background: var(--white); border-radius: 14px; padding: 20px; border: 1px solid var(--light-gray); height: fit-content; position: sticky; top: 70px; }
+        .sidebar-user { text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--light-gray); margin-bottom: 16px; }
+        .sidebar-avatar { width: 56px; height: 56px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--navy); font-size: 22px; font-weight: 700; margin: 0 auto 10px; }
+        .sidebar-user h4 { font-size: 15px; margin-bottom: 3px; }
+        .sidebar-user p { font-size: 12px; color: var(--gray); }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 4px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--gray); transition: all 0.2s; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: var(--offwhite); color: var(--navy); }
+        .sidebar-menu a.active { border-left: 3px solid var(--gold); }
+        .sidebar-menu a .icon { font-size: 16px; width: 20px; text-align: center; }
+
+        /* Main Content */
+        .main-content { display: flex; flex-direction: column; gap: 24px; }
+
+        /* Balance Card */
+        .balance-card { background: linear-gradient(135deg, var(--navy), var(--navy-light)); border-radius: 16px; padding: 32px; color: var(--white); position: relative; overflow: hidden; }
+        .balance-card::before { content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%); border-radius: 50%; }
+        .balance-card > * { position: relative; z-index: 1; }
+        .balance-label { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .balance-amount { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; color: var(--gold); margin-bottom: 20px; }
+        .balance-meta { display: flex; gap: 30px; flex-wrap: wrap; }
+        .balance-meta-item p:first-child { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+        .balance-meta-item p:last-child { font-size: 14px; color: var(--white); font-weight: 600; }
+        .balance-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+        .balance-actions button { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
+        .btn-action-primary { background: var(--gold); color: var(--navy); }
+        .btn-action-primary:hover { background: var(--gold-light); }
+        .btn-action-secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.2) !important; }
+        .btn-action-secondary:hover { background: rgba(255,255,255,0.2); }
+
+        /* Quick Actions Grid */
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+        .quick-action-card { background: var(--white); border-radius: 12px; padding: 24px 16px; text-align: center; border: 1px solid var(--light-gray); cursor: pointer; transition: all 0.3s; }
+        .quick-action-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .quick-action-icon { width: 44px; height: 44px; background: var(--offwhite); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 20px; margin: 0 auto 12px; }
+        .quick-action-card h4 { font-size: 13px; margin-bottom: 4px; }
+        .quick-action-card p { font-size: 11px; color: var(--gray); }
+
+        /* Transactions */
+        .transactions-card { background: var(--white); border-radius: 14px; padding: 24px; border: 1px solid var(--light-gray); }
+        .transactions-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .transactions-header h3 { font-size: 18px; }
+        .transactions-header a { font-size: 12px; color: var(--gold); font-weight: 600; }
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--light-gray); }
+        .transaction-item:last-child { border-bottom: none; }
+        .transaction-left { display: flex; align-items: center; gap: 12px; }
+        .transaction-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .transaction-icon.credit { background: #d1fae5; color: #065f46; }
+        .transaction-icon.debit { background: #fee2e2; color: #991b1b; }
+        .transaction-info h4 { font-size: 14px; margin-bottom: 2px; }
+        .transaction-info p { font-size: 12px; color: var(--gray); }
+        .transaction-amount { font-size: 14px; font-weight: 600; }
+        .transaction-amount.credit { color: var(--success); }
+        .transaction-amount.debit { color: var(--danger); }
+
+        /* Cards Section */
+        .cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .card-section-box { background: var(--white); border-radius: 14px; padding: 24px; border: 1px solid var(--light-gray); }
+        .card-section-box h3 { font-size: 18px; margin-bottom: 16px; }
+        .my-card { margin-bottom: 16px; }
+        .my-card:last-child { margin-bottom: 0; }
+        .card-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+        .card-status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
+        .card-status span { font-size: 12px; color: var(--gray); }
+        .card-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .card-actions button { padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--light-gray); background: var(--white); transition: all 0.2s; }
+        .card-actions button:hover { border-color: var(--gold); background: var(--offwhite); }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--white); border-radius: 16px; padding: 32px; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; }
+        .modal h3 { font-size: 22px; margin-bottom: 6px; }
+        .modal > p { color: var(--gray); font-size: 13px; margin-bottom: 24px; }
+        .modal-close { float: right; background: none; border: none; font-size: 24px; color: var(--gray); cursor: pointer; margin-top: -8px; }
+        .modal-close:hover { color: var(--navy); }
+
+        /* Settings */
+        .settings-header { margin-bottom: 24px; }
+        .settings-header h2 { font-size: 26px; margin-bottom: 4px; }
+        .settings-header p { color: var(--gray); font-size: 13px; }
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .settings-card { background: var(--white); border-radius: 14px; padding: 24px; border: 1px solid var(--light-gray); }
+        .settings-card h3 { font-size: 17px; margin-bottom: 14px; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--light-gray); font-size: 13px; gap: 12px; }
+        .settings-row:last-child { border-bottom: none; }
+        .settings-row span { color: var(--gray); }
+        .settings-row strong { font-weight: 600; text-align: right; }
+        .settings-desc { color: var(--gray); font-size: 13px; margin-bottom: 14px; line-height: 1.6; }
+        @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }
+
+        /* Step indicator, reused from the signup flow for the PIN-change modal */
+        .signup-steps { display: flex; gap: 8px; margin-bottom: 24px; }
+        .step { flex: 1; height: 4px; background: var(--light-gray); border-radius: 2px; transition: all 0.3s; }
+        .step.active { background: var(--gold); }
+        .step.completed { background: var(--success); }
+        .signup-form-step { display: none; }
+        .signup-form-step.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .id-type-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+        .id-type-toggle button { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--light-gray); background: var(--white); color: var(--gray); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .id-type-toggle button.active { border-color: var(--gold); background: var(--offwhite); color: var(--navy); }
+
+        .btn-next, .btn-submit { width: 100%; background: var(--navy); color: var(--gold); padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; border: 1px solid var(--gold); cursor: pointer; transition: all 0.3s; margin-top: 10px; font-family: 'Inter', sans-serif; }
+        .btn-next:hover, .btn-submit:hover { background: var(--gold); color: var(--navy); }
+        .btn-back { background: transparent; color: var(--gray); border: 1px solid var(--light-gray); }
+        .btn-back:hover { background: var(--offwhite); color: var(--navy); }
+
+        [data-theme="dark"] .dashboard-nav .logo-text,
+        [data-theme="dark"] .balance-card,
+        [data-theme="dark"] .balance-meta-item p:last-child {
+            color: #ffffff;
+        }
+        [data-theme="dark"] .sidebar-menu a:hover,
+        [data-theme="dark"] .sidebar-menu a.active,
+        [data-theme="dark"] .modal-close:hover {
+            color: #eceadf;
+        }
+        [data-theme="dark"] .id-type-toggle button.active { color: #eceadf; }
+        [data-theme="dark"] .btn-back:hover { color: #eceadf; }
+
+        @media (max-width: 900px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0; z-index: 90; border-radius: 0; overflow-y: auto; }
+            .sidebar.active { display: block; }
+            .mobile-menu-btn-dash { display: flex; }
+            .quick-actions { grid-template-columns: repeat(2, 1fr); }
+            .cards-row { grid-template-columns: 1fr; }
+            .balance-amount { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-body">
+        <nav class="dashboard-nav">
+            <div class="container">
+                <a href="index.html" class="logo" style="text-decoration:none;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div class="logo-icon" style="width:32px;height:32px;font-size:14px;">N</div>
+                        <div class="logo-text" style="font-size:18px;">NOESIS</div>
+                    </div>
+                </a>
+                <div class="dashboard-nav-right">
+                    <span id="userGreeting">Welcome back</span>
+                    <button class="mobile-menu-btn-dash" onclick="toggleSidebar()">
+                        <span></span><span></span><span></span>
+                    </button>
+                    <a href="index.html">Website</a>
+                    <button onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="userAvatar">U</div>
+                    <h4 id="sidebarName">User Name</h4>
+                    <p id="sidebarEmail">user@email.com</p>
+                    <p style="margin-top:8px;"><span class="tier-badge standard" id="sidebarTierBadge">Standard</span></p>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-section="overview" onclick="showSection('overview', this); return false;"><span class="icon">&#9733;</span> Overview</a></li>
+                    <li><a href="#" onclick="openTransfer(); return false;"><span class="icon">&#8596;</span> Transfer</a></li>
+                    <li><a href="#" onclick="openBills(); return false;"><span class="icon">&#9874;</span> Pay Bills</a></li>
+                    <li><a href="#" onclick="openAirtime(); return false;"><span class="icon">&#9742;</span> Buy Airtime</a></li>
+                    <li><a href="#" onclick="showSection('cards'); return false;"><span class="icon">&#9633;</span> Cards</a></li>
+                    <li><a href="#" data-section="settings" onclick="showSection('settings', this); return false;"><span class="icon">&#9881;</span> Settings</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent">
+                <!-- Overview Section -->
+                <div id="overviewSection">
+                    <div class="balance-card">
+                        <div class="balance-label">Total Balance</div>
+                        <div class="balance-amount" id="balanceAmount">₦0.00</div>
+                        <div class="balance-meta">
+                            <div class="balance-meta-item">
+                                <p>Account Number</p>
+                                <p id="accNumber">----</p>
+                            </div>
+                            <div class="balance-meta-item">
+                                <p>Account Type</p>
+                                <p id="accType">Savings</p>
+                            </div>
+                            <div class="balance-meta-item">
+                                <p>Status</p>
+                                <p style="color:var(--success);">Active</p>
+                            </div>
+                        </div>
+                        <div class="balance-actions">
+                            <button class="btn-action-primary" onclick="openTransfer()">Send Money</button>
+                            <button class="btn-action-secondary" onclick="openBills()">Pay Bills</button>
+                            <button class="btn-action-secondary" onclick="openAirtime()">Buy Airtime</button>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action-card" onclick="openTransfer()">
+                            <div class="quick-action-icon">&#8596;</div>
+                            <h4>Transfer</h4>
+                            <p>Send to any bank</p>
+                        </div>
+                        <div class="quick-action-card" onclick="openBills()">
+                            <div class="quick-action-icon">&#9874;</div>
+                            <h4>Pay Bills</h4>
+                            <p>PHCN, DSTV, etc.</p>
+                        </div>
+                        <div class="quick-action-card" onclick="openAirtime()">
+                            <div class="quick-action-icon">&#9742;</div>
+                            <h4>Airtime</h4>
+                            <p>MTN, Glo, Airtel</p>
+                        </div>
+                        <div class="quick-action-card" onclick="showToast('Statement download coming soon')">
+                            <div class="quick-action-icon">&#9733;</div>
+                            <h4>Statement</h4>
+                            <p>Download PDF</p>
+                        </div>
+                        <div class="quick-action-card" onclick="openAddMoney()">
+                            <div class="quick-action-icon">&#43;</div>
+                            <h4>Add Money</h4>
+                            <p>Demo top-up</p>
+                        </div>
+                    </div>
+
+                    <div class="transactions-card">
+                        <div class="transactions-header">
+                            <h3>Recent Transactions</h3>
+                            <a href="#" onclick="showToast('Full history coming soon'); return false;">View All</a>
+                        </div>
+                        <div id="transactionsList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="cards-row">
+                        <div class="card-section-box">
+                            <h3>My Cards</h3>
+                            <div class="my-card">
+                                <div class="css-card css-card-gold" id="myCardVisual" style="max-width:280px;height:170px;">
+                                    <div class="css-card-content">
+                                        <div class="css-card-logo">NOESIS</div>
+                                        <div class="css-card-chip"></div>
+                                        <div class="css-card-number" id="myCardNumber">**** **** **** 8842</div>
+                                        <div class="css-card-bottom">
+                                            <div class="css-card-name" id="myCardTierLabel">DEBIT</div>
+                                            <div class="css-card-expiry">09/28</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-status">
+                                    <div class="card-status-dot"></div>
+                                    <span>Active</span>
+                                </div>
+                                <div class="card-actions">
+                                    <button onclick="showToast('Card frozen temporarily')">Freeze</button>
+                                    <button onclick="openPinChangeStep1()">Change PIN</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-section-box">
+                            <h3>Quick Stats</h3>
+                            <div style="display:flex;flex-direction:column;gap:16px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--offwhite);border-radius:10px;">
+                                    <div>
+                                        <p style="font-size:11px;color:var(--gray);text-transform:uppercase;">This Month</p>
+                                        <p style="font-size:16px;font-weight:700;" id="monthIn">+₦0.00</p>
+                                    </div>
+                                    <div style="width:36px;height:36px;background:#d1fae5;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#065f46;font-size:14px;">&#8593;</div>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--offwhite);border-radius:10px;">
+                                    <div>
+                                        <p style="font-size:11px;color:var(--gray);text-transform:uppercase;">This Month</p>
+                                        <p style="font-size:16px;font-weight:700;" id="monthOut">-₦0.00</p>
+                                    </div>
+                                    <div style="width:36px;height:36px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#991b1b;font-size:14px;">&#8595;</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settingsSection" style="display:none;">
+                    <div class="settings-header">
+                        <h2>Settings</h2>
+                        <p>Your profile, security, and preferences.</p>
+                    </div>
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3>Profile</h3>
+                            <div class="settings-row"><span>Full Name</span><strong id="settingsName">—</strong></div>
+                            <div class="settings-row"><span>Email</span><strong id="settingsEmail">—</strong></div>
+                            <div class="settings-row"><span>Phone</span><strong id="settingsPhone">—</strong></div>
+                            <div class="settings-row"><span>Account Number</span><strong id="settingsAccNum">—</strong></div>
+                            <div class="settings-row"><span>Account Type</span><strong id="settingsAccType">—</strong></div>
+                            <div class="settings-row"><span>Account Tier</span><strong><span class="tier-badge standard" id="settingsTierBadge">Standard</span></strong></div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Preferences</h3>
+                            <div class="settings-row">
+                                <span>Theme</span>
+                                <div class="theme-toggle" id="themeToggle">
+                                    <button type="button" class="theme-btn" data-choice="light" onclick="setThemeChoice('light')">Light</button>
+                                    <button type="button" class="theme-btn" data-choice="dark" onclick="setThemeChoice('dark')">Dark</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Security</h3>
+                            <p class="settings-desc">Changing your transaction PIN requires verifying your password, then a code sent to your email — so it's really you.</p>
+                            <button class="btn-dark" onclick="openPinChangeStep1()">Change Transaction PIN</button>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Account Upgrade</h3>
+                            <p class="settings-desc" id="upgradeDesc">Upgrade to NOESIS Premium for a Platinum card and higher transfer limits. Requires your BVN or NIN.</p>
+                            <button class="btn-dark" id="upgradeBtn" onclick="openUpgradeModal()">Upgrade Account</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('transferModal')">&times;</button>
+            <h3>Send Money</h3>
+            <p>Transfer to any Nigerian bank instantly.</p>
+            <form id="transferForm">
+                <div class="form-group">
+                    <label>Select Bank</label>
+                    <select id="transferBank" required>
+                        <option value="">Choose bank</option>
+                        <option value="GTB">GTBank</option>
+                        <option value="Zenith">Zenith Bank</option>
+                        <option value="UBA">UBA</option>
+                        <option value="Access">Access Bank</option>
+                        <option value="First">First Bank</option>
+                        <option value="FCMB">FCMB</option>
+                        <option value="Fidelity">Fidelity Bank</option>
+                        <option value="Union">Union Bank</option>
+                        <option value="Stanbic">Stanbic IBTC</option>
+                        <option value="Polaris">Polaris Bank</option>
+                        <option value="NOESIS">NOESIS Bank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" id="transferAccNum" placeholder="10-digit account number" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Name</label>
+                    <input type="text" id="transferAccName" placeholder="Will auto-verify" readonly style="background:var(--offwhite);">
+                </div>
+                <div class="form-group">
+                    <label>Amount (₦)</label>
+                    <input type="number" id="transferAmount" placeholder="0.00" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Narration</label>
+                    <input type="text" id="transferNarration" placeholder="What is this for?">
+                </div>
+                <div class="form-group">
+                    <label>Transaction PIN</label>
+                    <input type="password" id="transferPin" placeholder="****" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn-submit">Send Money</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bills Modal -->
+    <div class="modal-overlay" id="billsModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('billsModal')">&times;</button>
+            <h3>Pay Bills</h3>
+            <p>Settle your bills in seconds.</p>
+            <form id="billsForm">
+                <div class="form-group">
+                    <label>Bill Type</label>
+                    <select id="billType" required>
+                        <option value="">Select bill type</option>
+                        <option value="PHCN">PHCN / Electricity</option>
+                        <option value="DSTV">DSTV</option>
+                        <option value="GOTV">GOTV</option>
+                        <option value="StarTimes">StarTimes</option>
+                        <option value="Water">Water Board</option>
+                        <option value="Internet">Internet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Meter / Decoder / Account Number</label>
+                    <input type="text" id="billNumber" placeholder="Enter number" required>
+                </div>
+                <div class="form-group">
+                    <label>Amount (₦)</label>
+                    <input type="number" id="billAmount" placeholder="0.00" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Transaction PIN</label>
+                    <input type="password" id="billPin" placeholder="****" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn-submit">Pay Bill</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Airtime Modal -->
+    <div class="modal-overlay" id="airtimeModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('airtimeModal')">&times;</button>
+            <h3>Buy Airtime</h3>
+            <p>Recharge instantly on any network.</p>
+            <form id="airtimeForm">
+                <div class="form-group">
+                    <label>Network</label>
+                    <select id="airtimeNetwork" required>
+                        <option value="">Select network</option>
+                        <option value="MTN">MTN</option>
+                        <option value="Glo">Glo</option>
+                        <option value="Airtel">Airtel</option>
+                        <option value="9mobile">9mobile</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="airtimePhone" placeholder="+234 800 000 0000" required>
+                </div>
+                <div class="form-group">
+                    <label>Amount (₦)</label>
+                    <input type="number" id="airtimeAmount" placeholder="0.00" min="50" required>
+                </div>
+                <div class="form-group">
+                    <label>Transaction PIN</label>
+                    <input type="password" id="airtimePin" placeholder="****" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn-submit">Buy Airtime</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PIN Change Modal (password → email code → new PIN) -->
+    <div class="modal-overlay" id="pinChangeModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('pinChangeModal')">&times;</button>
+            <h3>Change Transaction PIN</h3>
+            <p>Verify it's really you, then set a new PIN.</p>
+
+            <div class="signup-steps">
+                <div class="step active" id="pinStep1Indicator"></div>
+                <div class="step" id="pinStep2Indicator"></div>
+                <div class="step" id="pinStep3Indicator"></div>
+            </div>
+
+            <div class="alert-box" id="pinChangeAlert" style="display:none;">
+                <div class="alert-box-icon">&#9888;</div>
+                <p id="pinChangeAlertMsg"></p>
+            </div>
+
+            <div class="signup-form-step active" id="pinStep1">
+                <div class="form-group">
+                    <label>Confirm Your Password</label>
+                    <input type="password" id="pinVerifyPassword" placeholder="Enter your account password">
+                </div>
+                <button type="button" class="btn-submit" onclick="submitPinStep1()">Send Verification Code</button>
+            </div>
+
+            <div class="signup-form-step" id="pinStep2">
+                <div class="form-group">
+                    <label>Enter the 6-Digit Code</label>
+                    <input type="text" id="pinOtpInput" class="code-input" placeholder="------" maxlength="6" inputmode="numeric">
+                    <p style="font-size:12px;color:var(--gray);margin-top:6px;" id="pinOtpSentTo"></p>
+                </div>
+                <button type="button" class="btn-submit" onclick="submitPinStep2()">Verify Code</button>
+                <button type="button" class="btn-next btn-back" style="width:100%;margin-top:8px;" onclick="resendPinOtp()">Resend Code</button>
+            </div>
+
+            <div class="signup-form-step" id="pinStep3">
+                <div class="form-group">
+                    <label>New 4-Digit PIN</label>
+                    <input type="password" id="newPin1" class="code-input" placeholder="****" maxlength="4" inputmode="numeric">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New PIN</label>
+                    <input type="password" id="newPin2" class="code-input" placeholder="****" maxlength="4" inputmode="numeric">
+                </div>
+                <button type="button" class="btn-submit" onclick="submitPinStep3()">Save New PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Upgrade Modal -->
+    <div class="modal-overlay" id="upgradeModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('upgradeModal')">&times;</button>
+            <h3>Upgrade to NOESIS Premium</h3>
+            <p>Verify with your BVN or NIN to unlock a Platinum card and higher limits.</p>
+
+            <div class="alert-box" id="upgradeAlert" style="display:none;">
+                <div class="alert-box-icon">&#9888;</div>
+                <p id="upgradeAlertMsg"></p>
+            </div>
+
+            <div class="id-type-toggle">
+                <button type="button" class="active" id="idTypeBvnBtn" onclick="setIdType('BVN')">BVN</button>
+                <button type="button" id="idTypeNinBtn" onclick="setIdType('NIN')">NIN</button>
+            </div>
+            <div class="form-group">
+                <label id="idTypeLabel">Bank Verification Number (BVN)</label>
+                <input type="text" id="upgradeIdValue" placeholder="11-digit number" maxlength="11" inputmode="numeric">
+            </div>
+            <button type="button" class="btn-submit" onclick="submitUpgrade()">Verify & Upgrade</button>
+        </div>
+    </div>
+
+    <!-- Add Money Modal -->
+    <div class="modal-overlay" id="addMoneyModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('addMoneyModal')">&times;</button>
+            <h3>Add Money</h3>
+            <p>Top up your balance so you can test transfers. Demo feature — no real money moves.</p>
+            <form id="addMoneyForm">
+                <div class="form-group">
+                    <label>Amount (₦)</label>
+                    <input type="number" id="addMoneyAmount" placeholder="0.00" min="100" required>
+                </div>
+                <button type="submit" class="btn-submit">Add Money</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+    <script>
+        // Auth check
+        let user = NoesisBank.getCurrentUser();
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        // Load user data
+        document.getElementById('userGreeting').textContent = 'Welcome, ' + (user ? user.name.split(' ')[0] : 'Guest');
+        document.getElementById('sidebarName').textContent = user ? user.name : 'Guest';
+        document.getElementById('sidebarEmail').textContent = user ? user.email : '';
+        document.getElementById('userAvatar').textContent = user ? user.name.charAt(0).toUpperCase() : 'U';
+        document.getElementById('accNumber').textContent = user ? user.accountNumber : '----';
+        document.getElementById('accType').textContent = user ? user.accountType : 'Savings';
+
+        // Balance & transactions — every account starts at a clean slate
+        // (₦0, no history). Use "Add Money" to fund it for testing.
+        let balance = user ? user.balance : 0;
+        let transactions = user ? NoesisBank.getTransactions(user.id) : [];
+
+        function formatMoney(amt) {
+            return NoesisBank.formatMoney(amt);
+        }
+
+        function renderBalance() {
+            document.getElementById('balanceAmount').textContent = formatMoney(balance);
+            let inAmt = 0, outAmt = 0;
+            transactions.forEach(t => {
+                if (t.type === 'credit') inAmt += t.amount;
+                else outAmt += t.amount;
+            });
+            document.getElementById('monthIn').textContent = '+' + formatMoney(inAmt);
+            document.getElementById('monthOut').textContent = '-' + formatMoney(outAmt);
+        }
+
+        function renderTransactions() {
+            const list = document.getElementById('transactionsList');
+            if (transactions.length === 0) {
+                list.innerHTML = '<p style="text-align:center;color:var(--gray);padding:20px;">No transactions yet.</p>';
+                return;
+            }
+            list.innerHTML = transactions.slice().reverse().slice(0, 8).map(tx => {
+                const date = new Date(tx.date);
+                const dateStr = date.toLocaleDateString('en-NG', { day: 'numeric', month: 'short' });
+                return `
+                    <div class="transaction-item">
+                        <div class="transaction-left">
+                            <div class="transaction-icon ${tx.type}">${tx.type === 'credit' ? '&#8593;' : '&#8595;'}</div>
+                            <div class="transaction-info">
+                                <h4>${tx.desc}</h4>
+                                <p>${dateStr}</p>
+                            </div>
+                        </div>
+                        <div class="transaction-amount ${tx.type}">${tx.type === 'credit' ? '+' : '-'}${formatMoney(tx.amount)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCardTier() {
+            const isPremium = user && user.tier === 'premium';
+            const card = document.getElementById('myCardVisual');
+            card.classList.toggle('css-card-gold', !isPremium);
+            card.classList.toggle('css-card-platinum', isPremium);
+            document.getElementById('myCardTierLabel').textContent = isPremium ? 'PLATINUM' : 'DEBIT';
+        }
+
+        function renderSettings() {
+            if (!user) return;
+            document.getElementById('settingsName').textContent = user.name;
+            document.getElementById('settingsEmail').textContent = user.email;
+            document.getElementById('settingsAccNum').textContent = user.accountNumber;
+            document.getElementById('settingsAccType').textContent = user.accountType;
+
+            const fullUser = NoesisBank.getUsers().find(u => u.id === user.id);
+            document.getElementById('settingsPhone').textContent = fullUser ? fullUser.phone : '—';
+
+            const isPremium = user.tier === 'premium';
+            [document.getElementById('sidebarTierBadge'), document.getElementById('settingsTierBadge')].forEach(el => {
+                el.textContent = isPremium ? 'Premium' : 'Standard';
+                el.classList.toggle('standard', !isPremium);
+                el.classList.toggle('premium', isPremium);
+            });
+            document.getElementById('upgradeBtn').style.display = isPremium ? 'none' : 'inline-block';
+            document.getElementById('upgradeDesc').textContent = isPremium
+                ? 'You\'re on NOESIS Premium — enjoy your Platinum card and higher limits.'
+                : 'Upgrade to NOESIS Premium for a Platinum card and higher transfer limits. Requires your BVN or NIN.';
+        }
+
+        renderBalance();
+        renderTransactions();
+        renderCardTier();
+        renderSettings();
+
+        // Section switching — Overview vs Settings (Cards stays a preview toast)
+        function showSection(section, linkEl) {
+            if (section === 'cards') { showToast('Cards management coming soon'); return; }
+            document.getElementById('overviewSection').style.display = section === 'overview' ? '' : 'none';
+            document.getElementById('settingsSection').style.display = section === 'settings' ? '' : 'none';
+            document.querySelectorAll('.sidebar-menu a[data-section]').forEach(a => a.classList.remove('active'));
+            if (linkEl) linkEl.classList.add('active');
+            if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('active');
+        }
+
+        // Modals
+        function openTransfer() { document.getElementById('transferModal').classList.add('active'); }
+        function openBills() { document.getElementById('billsModal').classList.add('active'); }
+        function openAirtime() { document.getElementById('airtimeModal').classList.add('active'); }
+        function openAddMoney() { document.getElementById('addMoneyModal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Live-verify the recipient — a real lookup for NOESIS Bank accounts,
+        // a simulated note for every other bank (there's nothing real to check).
+        function updateTransferAccName() {
+            const bank = document.getElementById('transferBank').value;
+            const accNum = document.getElementById('transferAccNum').value;
+            const nameField = document.getElementById('transferAccName');
+            if (bank !== 'NOESIS') {
+                nameField.value = accNum.length === 10 ? 'External bank — simulated for demo' : '';
+                return;
+            }
+            if (accNum.length !== 10) { nameField.value = ''; return; }
+            if (accNum === user.accountNumber) { nameField.value = 'That\'s your own account'; return; }
+            const recipient = NoesisBank.findByAccountNumber(accNum);
+            nameField.value = recipient ? (recipient.firstName + ' ' + recipient.lastName) : 'No NOESIS account found with this number';
+        }
+        document.getElementById('transferAccNum').addEventListener('input', updateTransferAccName);
+        document.getElementById('transferBank').addEventListener('change', updateTransferAccName);
+
+        // Transfer — real ledger movement within NOESIS Bank, simulated debit elsewhere
+        document.getElementById('transferForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('transferAmount').value);
+            const pin = document.getElementById('transferPin').value;
+            const bank = document.getElementById('transferBank').value;
+            const accNum = document.getElementById('transferAccNum').value;
+            const nar = document.getElementById('transferNarration').value;
+
+            if (!NoesisBank.verifyPin(user.id, pin)) { showToast('Invalid PIN'); return; }
+            if (amt > balance) { showToast('Insufficient balance'); return; }
+
+            if (bank === 'NOESIS') {
+                const result = NoesisBank.transferFunds(user.id, accNum, amt, nar);
+                if (!result.ok) { showToast(result.error); return; }
+                showToast('Transfer successful! ' + formatMoney(amt) + ' sent to ' + result.recipientName + '.');
+            } else {
+                NoesisBank.updateUser(user.id, { balance: balance - amt });
+                NoesisBank.addTransaction(user.id, {
+                    type: 'debit',
+                    desc: 'Transfer to ' + bank + ' (****' + accNum.slice(-4) + ')' + (nar ? ' — ' + nar : ''),
+                    amount: amt
+                });
+                showToast('Transfer successful! ' + formatMoney(amt) + ' sent.');
+            }
+
+            refreshAfterMutation();
+            closeModal('transferModal');
+            this.reset();
+        });
+
+        // Bills
+        document.getElementById('billsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('billAmount').value);
+            const pin = document.getElementById('billPin').value;
+            const billType = document.getElementById('billType').value;
+
+            if (!NoesisBank.verifyPin(user.id, pin)) { showToast('Invalid PIN'); return; }
+            if (amt > balance) { showToast('Insufficient balance'); return; }
+
+            NoesisBank.updateUser(user.id, { balance: balance - amt });
+            NoesisBank.addTransaction(user.id, { type: 'debit', desc: billType + ' Bill Payment', amount: amt });
+            showToast(billType + ' bill paid successfully!');
+
+            refreshAfterMutation();
+            closeModal('billsModal');
+            this.reset();
+        });
+
+        // Airtime
+        document.getElementById('airtimeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('airtimeAmount').value);
+            const pin = document.getElementById('airtimePin').value;
+            const network = document.getElementById('airtimeNetwork').value;
+
+            if (!NoesisBank.verifyPin(user.id, pin)) { showToast('Invalid PIN'); return; }
+            if (amt > balance) { showToast('Insufficient balance'); return; }
+
+            NoesisBank.updateUser(user.id, { balance: balance - amt });
+            NoesisBank.addTransaction(user.id, { type: 'debit', desc: network + ' Airtime', amount: amt });
+            showToast(network + ' airtime purchased!');
+
+            refreshAfterMutation();
+            closeModal('airtimeModal');
+            this.reset();
+        });
+
+        // Add Money — a demo top-up so a clean-slate (₦0) account can
+        // actually be used to test transfers, bills, and airtime.
+        document.getElementById('addMoneyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('addMoneyAmount').value);
+            const result = NoesisBank.addFunds(user.id, amt);
+            if (!result.ok) { showToast(result.error); return; }
+            showToast(formatMoney(amt) + ' added to your balance.');
+            refreshAfterMutation();
+            closeModal('addMoneyModal');
+            this.reset();
+        });
+
+        function refreshAfterMutation() {
+            user = NoesisBank.getCurrentUser();
+            balance = user.balance;
+            transactions = NoesisBank.getTransactions(user.id);
+            renderBalance();
+            renderTransactions();
+            renderCardTier();
+            renderSettings();
+        }
+
+        function logout() { NoesisBank.logout(); }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        /* ---------------- Theme (Settings → Preferences) ---------------- */
+        function renderThemeButtons() {
+            const current = NoesisBank.getTheme();
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.choice === current);
+            });
+        }
+        function setThemeChoice(theme) {
+            NoesisBank.setTheme(theme);
+            renderThemeButtons();
+        }
+        renderThemeButtons();
+
+        /* ---------------- Change PIN: password → emailed code → new PIN ---------------- */
+        function pinGoToStep(step) {
+            document.querySelectorAll('#pinChangeModal .signup-form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('pinStep' + step).classList.add('active');
+            for (let i = 1; i <= 3; i++) {
+                const ind = document.getElementById('pinStep' + i + 'Indicator');
+                ind.classList.remove('active', 'completed');
+                if (i < step) ind.classList.add('completed');
+                else if (i === step) ind.classList.add('active');
+            }
+        }
+        function pinAlert(msg) {
+            document.getElementById('pinChangeAlertMsg').textContent = msg;
+            document.getElementById('pinChangeAlert').style.display = 'flex';
+        }
+        function openPinChangeStep1() {
+            document.getElementById('pinChangeAlert').style.display = 'none';
+            document.getElementById('pinVerifyPassword').value = '';
+            document.getElementById('pinOtpInput').value = '';
+            document.getElementById('newPin1').value = '';
+            document.getElementById('newPin2').value = '';
+            pinGoToStep(1);
+            document.getElementById('pinChangeModal').classList.add('active');
+        }
+        function submitPinStep1() {
+            const pw = document.getElementById('pinVerifyPassword').value;
+            if (!NoesisBank.verifyPassword(user.id, pw)) { pinAlert('That password is incorrect.'); return; }
+            document.getElementById('pinChangeAlert').style.display = 'none';
+            sendPinOtp();
+            pinGoToStep(2);
+        }
+        function sendPinOtp() {
+            const code = NoesisBank.generateOTP(user.id);
+            document.getElementById('pinOtpSentTo').textContent = 'Code sent to ' + NoesisBank.maskEmail(user.email);
+            NoesisBank.sendEmail({
+                to_email: user.email,
+                to_name: user.name.split(' ')[0],
+                subject: 'Your NOESIS verification code',
+                message: 'Your verification code is ' + code + '. It expires in 10 minutes. If you didn\'t request a PIN change, contact us right away at +234 707 094 4581.'
+            }).then(result => {
+                if (!result.sent) {
+                    showToast('EmailJS isn\'t configured yet — your code is ' + code + ' (shown here so you can still test this)');
+                }
+            });
+        }
+        function resendPinOtp() { sendPinOtp(); showToast('New code sent'); }
+        function submitPinStep2() {
+            const code = document.getElementById('pinOtpInput').value;
+            if (!NoesisBank.verifyOTP(user.id, code)) { pinAlert('That code is incorrect or has expired.'); return; }
+            document.getElementById('pinChangeAlert').style.display = 'none';
+            pinGoToStep(3);
+        }
+        function submitPinStep3() {
+            const p1 = document.getElementById('newPin1').value;
+            const p2 = document.getElementById('newPin2').value;
+            if (!/^\d{4}$/.test(p1)) { pinAlert('PIN must be exactly 4 digits.'); return; }
+            if (p1 !== p2) { pinAlert('PINs do not match.'); return; }
+            NoesisBank.setPin(user.id, p1);
+            NoesisBank.clearOTP(user.id);
+            closeModal('pinChangeModal');
+            showToast('PIN changed successfully.');
+            NoesisBank.sendEmail({
+                to_email: user.email,
+                to_name: user.name.split(' ')[0],
+                subject: 'Your transaction PIN was changed',
+                message: 'Your NOESIS transaction PIN was changed on ' + new Date().toLocaleString('en-NG') + '. If this wasn\'t you, contact us immediately at +234 707 094 4581.'
+            });
+        }
+
+        /* ---------------- Account upgrade — BVN or NIN required ---------------- */
+        let selectedIdType = 'BVN';
+        function setIdType(type) {
+            selectedIdType = type;
+            document.getElementById('idTypeBvnBtn').classList.toggle('active', type === 'BVN');
+            document.getElementById('idTypeNinBtn').classList.toggle('active', type === 'NIN');
+            document.getElementById('idTypeLabel').textContent = type === 'BVN' ? 'Bank Verification Number (BVN)' : 'National Identification Number (NIN)';
+        }
+        function openUpgradeModal() {
+            document.getElementById('upgradeAlert').style.display = 'none';
+            document.getElementById('upgradeIdValue').value = '';
+            setIdType('BVN');
+            document.getElementById('upgradeModal').classList.add('active');
+        }
+        function submitUpgrade() {
+            const value = document.getElementById('upgradeIdValue').value;
+            const result = NoesisBank.upgradeAccount(user.id, selectedIdType, value);
+            if (!result.ok) {
+                document.getElementById('upgradeAlertMsg').textContent = result.error;
+                document.getElementById('upgradeAlert').style.display = 'flex';
+                return;
+            }
+            closeModal('upgradeModal');
+            refreshAfterMutation();
+            showToast('Upgraded to NOESIS Premium!');
+        }
+    </script>
+</body>
+</html>

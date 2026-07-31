@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('noesisTheme') || 'light');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services — NOESIS Bank & Trust</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .services-hero { padding: 60px 0; background: var(--offwhite); }
+        .services-hero .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .services-hero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .service-hero-card { background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--light-gray); transition: all 0.3s; }
+        .service-hero-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--gold); }
+        .service-hero-img { height: 160px; background: var(--navy); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 40px; }
+        .service-hero-body { padding: 28px; }
+        .service-hero-body h3 { font-size: 22px; margin-bottom: 10px; }
+        .service-hero-body p { color: var(--gray); font-size: 14px; margin-bottom: 16px; }
+        .service-hero-body a { color: var(--gold); font-weight: 600; font-size: 13px; }
+        .service-hero-body a:hover { color: var(--navy); }
+
+        .service-detail { padding: 60px 0; }
+        .service-detail:nth-child(even) { background: var(--offwhite); }
+        .service-detail .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .service-detail.reverse .container { direction: rtl; }
+        .service-detail.reverse .container > * { direction: ltr; }
+        .service-detail-visual { min-height: 300px; background: linear-gradient(135deg, var(--navy-light), var(--navy)); border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .service-detail-visual-inner { text-align: center; color: var(--gold); font-family: 'Playfair Display', serif; font-size: 64px; }
+        .service-detail-visual-inner span { display: block; font-size: 13px; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
+        .service-detail-content h2 { font-size: 32px; margin-bottom: 16px; }
+        .service-detail-content h2 span { color: var(--gold); }
+        .service-detail-content > p { color: var(--gray); font-size: 15px; margin-bottom: 24px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 14px; background: var(--white); border-radius: 8px; border: 1px solid var(--light-gray); }
+        .feature-item .check { width: 22px; height: 22px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--navy); font-size: 11px; flex-shrink: 0; }
+        .feature-item p { font-size: 13px; color: var(--navy); font-weight: 500; margin: 0; }
+
+        .rates-section { padding: 80px 0; background: var(--navy); color: var(--white); }
+        .rates-section .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .rates-section .section-header { text-align: center; margin-bottom: 48px; }
+        .rates-section .section-header h2 { color: var(--white); font-size: 36px; margin-bottom: 12px; }
+        .rates-section .section-header p { color: rgba(255,255,255,0.6); font-size: 16px; }
+        .rates-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .rate-card { background: var(--navy-light); border-radius: 14px; padding: 32px 24px; text-align: center; border: 1px solid rgba(201,168,76,0.2); transition: all 0.3s; }
+        .rate-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+        .rate-card h4 { color: var(--gold-light); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .rate-value { font-family: 'Playfair Display', serif; font-size: 40px; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+        .rate-desc { color: rgba(255,255,255,0.5); font-size: 13px; }
+
+        [data-theme="dark"] .rates-section { color: #ffffff; }
+        [data-theme="dark"] .feature-item p { color: #eceadf; }
+        [data-theme="dark"] .service-hero-body a:hover { color: #eceadf; }
+
+        @media (max-width: 768px) {
+            .services-hero-grid, .service-detail .container, .rates-grid { grid-template-columns: 1fr; }
+            .service-detail.reverse .container { direction: ltr; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <span>+234 707 094 4581 | Mon–Fri: 8AM–5PM</span>
+            <div>
+                <a href="login.html">Internet Banking</a>
+                <a href="contact.html">Find a Branch</a>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">N</div>
+                <div>
+                    <div class="logo-text">NOESIS</div>
+                    <div class="logo-sub">Bank & Trust</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html" class="active">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="login.html" class="nav-cta">Online Login</a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html" class="active">Services</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html">Online Login</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Our <span>Services</span></h1>
+            <p>Banking solutions designed for how Nigerians actually live and work.</p>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> <span>Services</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-hero">
+        <div class="container">
+            <div class="services-hero-grid">
+                <div class="service-hero-card">
+                    <div class="service-hero-img">&#9733;</div>
+                    <div class="service-hero-body">
+                        <h3>Personal Banking</h3>
+                        <p>Current accounts, savings, loans, and cards designed for your everyday needs.</p>
+                        <a href="#personal">View Details &rarr;</a>
+                    </div>
+                </div>
+                <div class="service-hero-card">
+                    <div class="service-hero-img">&#9874;</div>
+                    <div class="service-hero-body">
+                        <h3>Business Banking</h3>
+                        <p>Corporate accounts, SME loans, POS, and payment tools for entrepreneurs.</p>
+                        <a href="#business">View Details &rarr;</a>
+                    </div>
+                </div>
+                <div class="service-hero-card">
+                    <div class="service-hero-img">&#9733;</div>
+                    <div class="service-hero-body">
+                        <h3>Digital Services</h3>
+                        <p>Mobile banking, instant transfers, bill pay, airtime, and more — all on your phone.</p>
+                        <a href="#digital">View Details &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-detail" id="personal">
+        <div class="container">
+            <div class="service-detail-content">
+                <h2>Personal <span>Banking</span></h2>
+                <p>From your first salary to your first home, NOESIS grows with you. No hidden fees, no unnecessary paperwork.</p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Zero-fee current accounts</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>High-yield savings (up to 18% p.a.)</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Personal loans from ₦50K to ₦5M</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Salary advance up to 50%</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>NOESIS debit & credit cards</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Mobile check deposit</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-detail-visual">
+                <div class="service-detail-visual-inner">
+                    &#9733;
+                    <span>Personal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-detail reverse" id="business">
+        <div class="container">
+            <div class="service-detail-content">
+                <h2>Business <span>Banking</span></h2>
+                <p>Built for Nigerian entrepreneurs. Whether you're a roadside vendor or a growing SME, we have tools for you.</p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Business current accounts</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>SME loans from ₦100K to ₦50M</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>POS terminals & agency banking</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Invoice & payment links</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Payroll management</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Dedicated business manager</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-detail-visual">
+                <div class="service-detail-visual-inner">
+                    &#9874;
+                    <span>Business</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-detail" id="digital">
+        <div class="container">
+            <div class="service-detail-content">
+                <h2>Digital <span>Services</span></h2>
+                <p>Your bank in your pocket. Send money, pay bills, buy airtime, and manage everything from the NOESIS app.</p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Instant transfers (24/7)</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Airtime & data purchase</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Bill payments (PHCN, DSTV, etc.)</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Biometric & PIN login</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Transaction history & statements</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="check">&#10003;</div>
+                        <p>Card freeze/unfreeze</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-detail-visual">
+                <div class="service-detail-visual-inner">
+                    &#9733;
+                    <span>Digital</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="rates-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Rates</h2>
+                <p>Competitive and transparent. No surprises.</p>
+            </div>
+            <div class="rates-grid">
+                <div class="rate-card">
+                    <h4>Savings Interest</h4>
+                    <div class="rate-value">18%</div>
+                    <div class="rate-desc">Per annum on savings</div>
+                </div>
+                <div class="rate-card">
+                    <h4>Personal Loan</h4>
+                    <div class="rate-value">3.5%</div>
+                    <div class="rate-desc">Monthly interest rate</div>
+                </div>
+                <div class="rate-card">
+                    <h4>SME Loan</h4>
+                    <div class="rate-value">2.8%</div>
+                    <div class="rate-desc">Monthly interest rate</div>
+                </div>
+                <div class="rate-card">
+                    <h4>Transfer Fee</h4>
+                    <div class="rate-value">₦10</div>
+                    <div class="rate-desc">To any Nigerian bank</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-icon">N</div>
+                    <p>NOESIS Bank & Trust — A new-generation Nigerian bank built on knowledge, trust, and innovation. Licensed by the Central Bank of Nigeria.</p>
+                    <div class="footer-social">
+                        <a href="https://x.com/SamuelOLUWA288">X</a>
+                        <a href="#">in</a>
+                        <a href="#">ig</a>
+                        <a href="https://wa.me/2347070944581">WA</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Banking</h4>
+                    <ul>
+                        <li><a href="services.html">Personal Accounts</a></li>
+                        <li><a href="services.html">Business Accounts</a></li>
+                        <li><a href="services.html">Credit Cards</a></li>
+                        <li><a href="services.html">Loans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="login.html">Internet Banking</a></li>
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Find a Branch</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NOESIS Bank & Trust. Licensed by CBN. NDIC Insured.</p>
+                <p class="footer-x-handle">X: @SamuelOLUWA288 | +234 707 094 4581</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
